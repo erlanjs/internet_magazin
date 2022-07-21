@@ -1,5 +1,9 @@
+import update from "immutability-helper"
+
 const defaultState = {
     catalog: [] ,
+    counter: 0 ,
+    users: [],
     card: [],
     rated: [],
     color: [],
@@ -14,6 +18,9 @@ export const ADD_RATED = "ADD_RATED"
 export const REMOVE_RATED = "REMOVE_RATED"
 export const GET_RATES = "GET_RATES"
 export const PUSH_RESET = "PUSH_RESET"
+export const ADD_COUNTER = "ADD_COUNTER"
+export const ADD_USER = "ADD_USER"
+
 
 const productReducer = (state = defaultState, action) => {
     switch (action.type) {
@@ -41,7 +48,7 @@ const productReducer = (state = defaultState, action) => {
             console.log(action.payload)
             return {...state, card: [...state.card, {...action.payload , quantity: +(action.payload[0])}]}
         case ADD_RATED:
-            const findColor = state.rated.find(el => el.id === action.payload.id)
+            const findColor =  state.rated.find(el => el.id === action.payload.id)
             if (findColor) {
                 return {...state , rated: state.rated.map(el => el.id === action.payload.id ?
                         {
@@ -59,6 +66,13 @@ const productReducer = (state = defaultState, action) => {
             return {...state , rates: action.payload}
         case PUSH_RESET:
             return {...state , toggleRates: [state.rates[`${action.payload}`]]}
+        case ADD_COUNTER:
+            return update(state, {counter : {$set: state.counter + 1 }});
+            // return {...state, counter: state.counter + 1};
+        case ADD_USER:
+            return update(state, {users : {$push: [action.payload] }});
+            // return {...state, users: [...state.users, action.payload]};
+
         default:
             return state
     }
